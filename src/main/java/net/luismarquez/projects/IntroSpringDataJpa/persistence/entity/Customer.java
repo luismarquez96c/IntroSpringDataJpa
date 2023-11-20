@@ -13,6 +13,9 @@ public class Customer {
     @Column(name = "nombre")
     private String name;
 
+    @Column(unique = true)
+    private String username;
+
     @Column(name = "contrasena")
     private String password;
 
@@ -40,11 +43,20 @@ public class Customer {
         this.password = password;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
