@@ -30,29 +30,45 @@ public class IntroSpringDataJpaApplication {
 	public CommandLineRunner testCustomerRepositoryCommand(){
 		return args -> {
 
-//			Customer juan = new Customer();
-//			juan.setName("Juan López");
-//			juan.setPassword("juan123");
-//
-//			customerCrudRepository.save(juan);
-//			System.out.println("Se guardo la entidad Juan");
+			Customer juan = new Customer();
+			juan.setName("Juan López");
+			juan.setPassword("juan123");
 
 
-//			System.out.println("\n Imprimiendo todos los clientes");
-//			customerCrudRepository.findAll()
-//					.forEach(System.out::println);
+			Customer ramon = new Customer();
+			ramon.setName("Ramon Hernández");
+			ramon.setPassword("ramon123");
+
+			Customer luis = new Customer();
+			luis.setName("Luis Márquez");
+			luis.setPassword("luis123");
 
 
-			System.out.println("\nBuscando e imprimiendo a cliente Juan");
-			customerCrudRepository.findById(1L)
-							.ifPresent(System.out::println);
+			System.out.println("Se guardaron 3 entidades");
+			List<Customer> clientes = List.of(juan,ramon, luis);
+			customerCrudRepository.saveAll(clientes);
 
-			System.out.println("\nEliminando al cliente Juan");
-			customerCrudRepository.deleteById(1L);
 
-			System.out.println("\nBuscando e imprimiendo a cliente Juan");
-			customerCrudRepository.findById(1L)
-					.ifPresent(System.out::println);
+			System.out.println("\n Imprimiendo todos los clientes");
+			customerCrudRepository.findAll()
+					.forEach(System.out::println);
+
+
+			System.out.println("\nBuscando e imprimiendo a cliente Luis");
+			customerCrudRepository.findById(3L)
+							.ifPresent(each -> {
+								each.setName("Ramon Hernández Chávez");
+								each.setPassword("ramonhc123");
+
+								customerCrudRepository.save(each);
+							});
+
+			System.out.println("\nEliminando al cliente Ramon");
+			customerCrudRepository.deleteById(2L);
+
+			System.out.println("\n Imprimiendo todos los clientes");
+			customerCrudRepository.findAll()
+					.forEach(System.out::println);
 
 		};
 	}
