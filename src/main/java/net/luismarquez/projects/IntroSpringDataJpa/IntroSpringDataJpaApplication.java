@@ -1,6 +1,8 @@
 package net.luismarquez.projects.IntroSpringDataJpa;
 
+import net.luismarquez.projects.IntroSpringDataJpa.persistence.entity.Address;
 import net.luismarquez.projects.IntroSpringDataJpa.persistence.entity.Customer;
+import net.luismarquez.projects.IntroSpringDataJpa.persistence.repository.AddressCrudRepository;
 import net.luismarquez.projects.IntroSpringDataJpa.persistence.repository.CustomerCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,7 +23,7 @@ public class IntroSpringDataJpaApplication {
 	private CustomerCrudRepository customerCrudRepository;
 
 	@Bean
-	public CommandLineRunner testQueryMethodCommand(){
+	public CommandLineRunner testOneToOneRelationshipsCommand(){
 		return args -> {
 
 			Customer juan = new Customer();
@@ -29,64 +31,47 @@ public class IntroSpringDataJpaApplication {
 			juan.setPassword("juan123");
 			juan.setUsername("juan123");
 
+			Address juanAddress = new Address();
+			juanAddress.setCountry("El Salvador");
+			juanAddress.setAddress("Casa 123, Calle Principal Col. Y, San Salvador");
+			juan.setAddress(juanAddress);
+
+
 			Customer ramonHernandez = new Customer();
 			ramonHernandez.setName("Ramon Hernández");
 			ramonHernandez.setPassword("ramon123");
 			ramonHernandez.setUsername("ramon123");
 
-			Customer ramonChávez = new Customer();
-			ramonChávez.setName("Ramon Chavez");
-			ramonChávez.setPassword("ramonc123");
-			ramonChávez.setUsername("ramonc123");
+			Address ramonAddress = new Address();
+			ramonAddress.setCountry("El Salvador");
+			ramonAddress.setAddress("Casa 456, Calle Principal Col. X, San Salvador");
+			ramonHernandez.setAddress(ramonAddress);
+
 
 			Customer luis = new Customer();
 			luis.setName("Luis Márquez");
 			luis.setPassword("luism123");
 			luis.setUsername("luism123");
 
-			Customer luisCanas = new Customer();
-			luisCanas.setName("Luis Cañas");
-			luisCanas.setPassword("luisc123");
-			luisCanas.setUsername("luisc123");
-
+			Address luisAddress = new Address();
+			luisAddress.setCountry("El Salvador");
+			luisAddress.setAddress("Casa 456, Calle Principal Col. X, San Salvador");
+			luis.setAddress(luisAddress);
 
 			System.out.println("Se guardaron 3 entidades");
-			List<Customer> clientes = List.of(juan,ramonChávez,ramonHernandez, luis, luisCanas);
-			customerCrudRepository.saveAll(clientes);
+			List<Customer> clientes = List.of(juan,ramonHernandez, luis);
+//			customerCrudRepository.saveAll(clientes);
 
-//			//Pruebas vídeo 1
-//			System.out.println("\nProbando query method: searchByUsername");
-//			System.out.println(customerCrudRepository.searchByUsername("luism123"));
-//
-//			System.out.println("\nProbando query method: findByUsername");
-//			System.out.println(customerCrudRepository.findByUsername("luisc123"));
+		};
+	}
 
-			//Pruebas vídeo 2
-
-			System.out.println("\nNombres que contienen la letra O");
-			customerCrudRepository.findByNameContaining("o")
-					.forEach(System.out::println);
-
-
-			System.out.println("\nNombres que empiezen con las letras ramon");
-			customerCrudRepository.queryByNameStartsWith("ramon")
-					.forEach(System.out::println);
-
-			System.out.println("\nNombres que terminan con las letras ez");
-			customerCrudRepository.readByNameIsEndingWith("ez")
-					.forEach(System.out::println);
-
-			System.out.println("\nNombres que contienen ez y cuyo id sea mayor que 3");
-			customerCrudRepository.findByNameContainingAndIdGreaterThanEqualOrderByIdDesc("ez", 3L)
-					.forEach(System.out::println);
-
-			System.out.println("\nNombres que contienen ez y cuyo id sea mayor que 3 utilizando JPQL y la anotación @Query");
-			customerCrudRepository.findAllByNameAndIdGreaterThan("ez", 3L)
-					.forEach(System.out::println);
-
-			System.out.println("\nNombres que contienen ez y cuyo id sea mayor que 3 utilizando SQL Nativo");
-			customerCrudRepository.findAllByNameAndIdGreaterThanUsingNativeSQL("ez", 3L)
-					.forEach(System.out::println);
+	@Bean
+	public CommandLineRunner testAddressCrudRepositoryCommand(AddressCrudRepository addressCrudRepository){
+		return args -> {
+			addressCrudRepository.findAll()
+					.forEach(each -> {
+						System.out.println(each.getAddress() + " - " + each.getCustomer().getId());
+					});
 		};
 	}
 
