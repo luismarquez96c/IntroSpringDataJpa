@@ -31,48 +31,20 @@ public class IntroSpringDataJpaApplication {
 			juan.setPassword("juan123");
 			juan.setUsername("juan123");
 
-			Address juanAddress = new Address();
-			juanAddress.setCountry("El Salvador");
-			juanAddress.setAddress("Casa 123, Calle Principal Col. Y, San Salvador");
-			juan.setAddress(juanAddress);
+			Address juanAddressOne = new Address();
+			juanAddressOne.setCountry("El Salvador");
+			juanAddressOne.setAddress("Casa 123, Calle Principal Col. Y, San Salvador");
 
+			Address juanAddressTwo = new Address();
+			juanAddressTwo.setCountry("Honduras");
+			juanAddressTwo.setAddress("Casa 654, Calle Principal Col. ABC, Tegucigalpa");
 
-			Customer ramonHernandez = new Customer();
-			ramonHernandez.setName("Ramon Hernández");
-			ramonHernandez.setPassword("ramon123");
-			ramonHernandez.setUsername("ramon123");
+			juan.setAddresses(List.of(juanAddressOne, juanAddressTwo));
 
-			Address ramonAddress = new Address();
-			ramonAddress.setCountry("El Salvador");
-			ramonAddress.setAddress("Casa 456, Calle Principal Col. X, San Salvador");
-			ramonHernandez.setAddress(ramonAddress);
-
-
-			Customer luis = new Customer();
-			luis.setName("Luis Márquez");
-			luis.setPassword("luism123");
-			luis.setUsername("luism123");
-
-			Address luisAddress = new Address();
-			luisAddress.setCountry("El Salvador");
-			luisAddress.setAddress("Casa 456, Calle Principal Col. X, San Salvador");
-			luis.setAddress(luisAddress);
-
-			System.out.println("Se guardaron 3 entidades");
-			List<Customer> clientes = List.of(juan,ramonHernandez, luis);
-//			customerCrudRepository.saveAll(clientes);
+			customerCrudRepository.save(juan);
 
 		};
 	}
 
-	@Bean
-	public CommandLineRunner testAddressCrudRepositoryCommand(AddressCrudRepository addressCrudRepository){
-		return args -> {
-			addressCrudRepository.findAll()
-					.forEach(each -> {
-						System.out.println(each.getAddress() + " - " + each.getCustomer().getId());
-					});
-		};
-	}
 
 }
