@@ -22,8 +22,11 @@ public class IntroSpringDataJpaApplication {
 	@Autowired
 	private CustomerCrudRepository customerCrudRepository;
 
+	@Autowired
+	private AddressCrudRepository addressCrudRepository;
+
 	@Bean
-	public CommandLineRunner testOneToOneRelationshipsCommand(){
+	public CommandLineRunner populateDatabaseCommand(){
 		return args -> {
 
 			Customer juan = new Customer();
@@ -39,10 +42,44 @@ public class IntroSpringDataJpaApplication {
 			juanAddressTwo.setCountry("Honduras");
 			juanAddressTwo.setAddress("Casa 654, Calle Principal Col. ABC, Tegucigalpa");
 
-			juan.setAddresses(List.of(juanAddressOne, juanAddressTwo));
+			juan.addAddress(juanAddressOne);
+			juan.addAddress(juanAddressTwo);
 
-			customerCrudRepository.save(juan);
 
+			Customer luis = new Customer();
+			luis.setName("Luis Márquez");
+			luis.setPassword("luis123");
+			luis.setUsername("luis123");
+
+			Address luisAddress = new Address();
+			luisAddress.setCountry("El Salvador");
+			luisAddress.setAddress("Casa 123, Calle Principal Col. Y, San Salvador");
+
+			luis.addAddress(luisAddress);
+
+//			customerCrudRepository.saveAll(List.of(juan, luis));
+		};
+	}
+
+	@Bean
+	public CommandLineRunner testQueryMethodsAndJPQLExamplesCommand(){
+		return args -> {
+
+			System.out.println("\nBuscando clientes de honduras utilizando query methods");
+			customerCrudRepository.findByAddressesCountry("Honduras")
+					.forEach(System.out::println);
+
+			System.out.println("\nBuscando clientes de el salvador utilizando JPQL");
+			customerCrudRepository.findCustomersFrom("El Salvador")
+					.forEach(System.out::println);
+
+			System.out.println("\nBuscando direcciones cuyo nombre de cliente termine en ?: utilizando QueryMethods");
+			addressCrudRepository.findByCustomerNameEndsWith("Marquez")
+					.forEach(System.out::println);
+
+			System.out.println("\nBuscando direcciones cuyo nombre de cliente termine en ?: utilizando JPQL");
+			addressCrudRepository.findByCustomerEndsWith("Lopez")
+					.forEach(System.out::println);
 		};
 	}
 

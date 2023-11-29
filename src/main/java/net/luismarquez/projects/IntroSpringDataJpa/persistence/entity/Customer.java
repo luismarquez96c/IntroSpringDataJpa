@@ -2,6 +2,7 @@ package net.luismarquez.projects.IntroSpringDataJpa.persistence.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,8 +22,7 @@ public class Customer {
     @Column(name = "contrasena")
     private String password;
 
-    @OneToMany(targetEntity = Address.class, cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "id_cliente")
+    @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "customer", fetch = FetchType.EAGER)
     private List<Address> addresses;
 
     public Long getId() {
@@ -73,5 +73,13 @@ public class Customer {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public void addAddress(Address newAddress) {
+        if(newAddress == null) return;;
+        if(addresses == null) addresses = new ArrayList<>();
+
+        addresses.add(newAddress);
+        newAddress.setCustomer(this);
     }
 }
